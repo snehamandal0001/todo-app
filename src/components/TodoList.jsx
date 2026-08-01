@@ -1,12 +1,22 @@
 function TodoList() {
+
+    const tasks = [
+        "Learn React",
+        "Complete Assignment",
+        "Go to Gym",
+        "Read a horror Book"
+    ];
+
     return (
         <div>
-            <h2>Tasks</h2>
+            <h2>Today's Tasks</h2>
 
             <ul>
-                <li>Learn React</li>
-                <li>Complete Assignment</li>
-                <li>Go to Gym</li>
+                {tasks.map((task, index) => (
+                    <li key={index}>
+                        {task}
+                    </li>
+                ))}
             </ul>
         </div>
     );
