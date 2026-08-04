@@ -3,27 +3,63 @@ import { useState } from "react";
 function TodoForm() {
 
     const [task, setTask] = useState("");
+    const [tasks, setTasks] = useState([]);
+
+    function addTask() {
+        if(task.trim()===""){
+    return;
+} else {
+
+        setTasks([...tasks, task]);//spread operator
+
+        setTask("");
+}
+    }
+
+    function deleteTask(indexToDelete){
+        const updatedTasks = tasks.filter((item, index) => {
+
+    return index !== indexToDelete;
+
+});
+
+setTasks(updatedTasks);
+
+
+
+}
 
     return (
+
         <div>
 
             <input
                 type="text"
-                placeholder="Enter Task"
                 value={task}
                 onChange={(event) => setTask(event.target.value)}
             />
 
-            <button>Add Task</button>
+            <button onClick={addTask}>
+                Add Task
+            </button>
+{tasks.length === 0 ? (
+    <p>No tasks available.</p>
+) : (
+    <ul>
+        {tasks.map((item, index) => (
+            <li key={index}>
+                {item}{"   "}
+                <button onClick={() => deleteTask(index)}>
+                    Delete
+                </button>
+            </li>
+        ))}
+    </ul>
+)}
 
-            <h3>{task}</h3>
-            <h2> helloooo {task}</h2>
-            <p>Characters length is {task.length}</p>
-            <p>{task.toUpperCase()}</p>
-           
-
-
+<p> the length of tasks to do is {tasks.length}</p>
         </div>
+
     );
 
 }

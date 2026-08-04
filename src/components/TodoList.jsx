@@ -1,8 +1,7 @@
 function TodoList() {
 
     const tasks = [
-        "Learn React",
-        "Complete Assignment",
+        
         "Go to Gym",
         "Read a horror Book"
     ];
