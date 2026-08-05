@@ -4,6 +4,8 @@ function TodoForm() {
 
     const [task, setTask] = useState("");
     const [tasks, setTasks] = useState([]);
+    const [editingIndex, setEditingIndex] = useState(null);
+    const [editText, setEditText] = useState("");
 
     function addTask() {
 
@@ -62,6 +64,12 @@ function toggleComplete(indexToToggle) {
 }
 const completedTasks = tasks.filter(task => task.completed).length;
 const remainingTasks = tasks.length - completedTasks;
+
+function startEditing(index) {
+    setEditingIndex(index);
+    setEditText(tasks[index].text);
+}
+
 // main starttttttttt
     return (
 <div className="max-w-3xl mx-auto mt-8 bg-white shadow-lg rounded-xl p-6">
@@ -127,19 +135,23 @@ const remainingTasks = tasks.length - completedTasks;
         transition-all
         duration-200
     " >
-                 <span
-    className={`
-        text-lg
-         
-        ${
-            item.completed
+                 {editingIndex === index ? (
+    <input
+        value={editText}
+        onChange={(e) => setEditText(e.target.value)}
+        className="border rounded px-2 py-1"
+    />
+) : (
+    <span
+        className={`
+            ${item.completed
                 ? "line-through text-gray-400"
-                : "text-gray-800"
-        }
-    `}
->
-    {item.text}
-</span>
+                : "text-gray-800"}
+        `}
+    >
+        {item.text}
+    </span>
+)}
         <div className ="flex gap -2">
             <button onClick={() => toggleComplete(index)}
         className={`
@@ -149,11 +161,28 @@ const remainingTasks = tasks.length - completedTasks;
         py-2
         rounded-lg
         
-        ${item.completed?"bg-yellow-500 hover:bg-yellow-600"
+        ${item.completed?"bg-blue-500 hover:bg-blue-600"
             :"bg-green-500 hover:bg-green-600 "}
     `}>
-     {item.completed ? "↩ Undo" : "✔ Complete"} 
+     {item.completed ? "↩ Undo" : "✔ Complete"} </button>
+
+     <button
+    onClick={() => startEditing(index)}
+    className="
+        bg-yellow-500
+        text-white
+        px-4
+        py-2
+        rounded-lg
+        hover:bg-yellow-600
+        transition
+    "
+>
+    ✏ Edit
 </button>
+
+
+
                 <button onClick={() => deleteTask(index)}
                    className =" bg-red-500
         text-white
