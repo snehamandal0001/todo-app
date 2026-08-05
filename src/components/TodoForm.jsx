@@ -28,6 +28,7 @@ function TodoForm() {
     setTask("");
 }
 
+
     function deleteTask(indexToDelete){
         const updatedTasks = tasks.filter((item, index) => {
 
@@ -36,9 +37,6 @@ function TodoForm() {
 });
 
 setTasks(updatedTasks);
-
-
-
 }
 
 
@@ -62,24 +60,95 @@ function toggleComplete(indexToToggle) {
     setTasks(updatedTasks);
 
 }
+
+
 const completedTasks = tasks.filter(task => task.completed).length;
+
+
 const remainingTasks = tasks.length - completedTasks;
+
 
 function startEditing(index) {
     setEditingIndex(index);
     setEditText(tasks[index].text);
 }
 
+
+function saveEdit(indexToSave) {
+
+    if (editText.trim() === "") {
+        return;
+    }
+
+    if (
+    tasks.some(
+        (item, index) =>
+            index !== indexToSave &&
+            item.text.toLowerCase() === editText.toLowerCase()
+    )
+) {
+    alert("Task already exists!");
+    return;
+}
+
+    const updatedTasks = tasks.map((item, index) => {
+
+        if (index === indexToSave) {
+
+            return {
+                ...item,
+                text: editText
+            };
+
+        }
+
+        return item;
+
+    });
+
+    setTasks(updatedTasks);
+
+    setEditingIndex(null);
+    setEditText("");
+
+}
+
+
+function cancelEdit() {
+
+    setEditingIndex(null);
+    setEditText("");
+
+}
+
+
+
+
+
 // main starttttttttt
     return (
+
+
 <div className="max-w-3xl mx-auto mt-8 bg-white shadow-lg rounded-xl p-6">
       
+
        <div className="flex gap-3 mb-6">
+
+
             <input
                 type="text"
                 value={task}
                 placeholder="What do you need to do today?"
                 onChange={(event) => setTask(event.target.value)}
+                onKeyDown={(e) => {
+
+    if (e.key === "Enter") {
+
+       addTask();
+
+    }
+
+}}
                 className="
         flex-1
         border
@@ -93,6 +162,7 @@ function startEditing(index) {
     "
             />
 
+
             <button  className="bg-blue-600 
             text-white
              px-5 py-2
@@ -104,11 +174,16 @@ function startEditing(index) {
             disabled={task.trim() === ""}>
                 Add Task
             </button>
+
+
             </div>
+
             
 {/* ipuut area ended */}
 
-{tasks.length === 0 ? (
+{tasks.length === 0 ?
+
+(
    <div className="bg-gray-50 rounded-xl p-8 text-center text-gray-500">
     <p className="text-lg">
         No tasks available.
@@ -118,7 +193,10 @@ function startEditing(index) {
         Add your first task above.
     </p>
 </div>
-) : (
+) :
+
+
+(
     <ul className="space-y-4">
         {tasks.map((item, index) => (
             <li key={index}
@@ -135,15 +213,67 @@ function startEditing(index) {
         transition-all
         duration-200
     " >
-                 {editingIndex === index ? (
-    <input
-        value={editText}
-        onChange={(e) => setEditText(e.target.value)}
-        className="border rounded px-2 py-1"
-    />
+    {editingIndex === index ? (
+
+
+    <div className="flex flex-1 gap-2">
+
+        <input
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            onKeyDown={(e) => {
+
+    if (e.key === "Enter") {
+
+        saveEdit(index);
+
+    }
+
+}}
+            className="
+                flex-1
+                border
+                rounded-lg
+                px-3
+                py-2
+            "
+        />
+
+        <button
+            onClick={() => saveEdit(index)}
+            disabled={editText.trim() === ""}
+            className="
+                bg-blue-600
+                text-white
+                px-4
+                rounded-lg
+                hover:bg-blue-700
+            "
+        >
+            💾 Save
+        </button>
+
+        <button
+            onClick={cancelEdit}
+            className="
+                bg-gray-500
+                text-white
+                px-4
+                rounded-lg
+                hover:bg-gray-600
+            "
+        >
+            ❌ Cancel
+
+        </button>
+
+    </div>
+
 ) : (
+
     <span
         className={`
+            text-lg
             ${item.completed
                 ? "line-through text-gray-400"
                 : "text-gray-800"}
@@ -151,8 +281,10 @@ function startEditing(index) {
     >
         {item.text}
     </span>
+
 )}
         <div className ="flex gap -2">
+
             <button onClick={() => toggleComplete(index)}
         className={`
        
@@ -164,7 +296,9 @@ function startEditing(index) {
         ${item.completed?"bg-blue-500 hover:bg-blue-600"
             :"bg-green-500 hover:bg-green-600 "}
     `}>
-     {item.completed ? "↩ Undo" : "✔ Complete"} </button>
+     {item.completed ? "↩ Undo" : "✔ Complete"}
+      </button>
+
 
      <button
     onClick={() => startEditing(index)}
@@ -181,9 +315,7 @@ function startEditing(index) {
     ✏ Edit
 </button>
 
-
-
-                <button onClick={() => deleteTask(index)}
+<button onClick={() => deleteTask(index)}
                    className =" bg-red-500
         text-white
         px-4
@@ -193,20 +325,22 @@ function startEditing(index) {
         transition
     ">
                    🗑 Delete
-                </button>
+</button>
             
 </div>
-            </li>
+
+   </li>
+   
         ))}
     </ul>
 )}
 
+
 <p> the length of tasks  is {tasks.length}</p>
 <p>✅ Completed: {completedTasks}</p>
 <p>📌 Remaining: {remainingTasks}</p>
+
         </div>
-        
- 
     );
 
 }
