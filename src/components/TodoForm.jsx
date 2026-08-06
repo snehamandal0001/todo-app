@@ -14,6 +14,7 @@ function TodoForm() {
     const [editingIndex, setEditingIndex] = useState(null);
     const [editText, setEditText] = useState("");
 
+    const [search, setSearch] = useState("");
     
 
 useEffect(() => {
@@ -155,6 +156,15 @@ function clearAllTasks() {
 }
 
 
+const filteredTasks = tasks.filter((item) =>
+
+    item.text
+        .toLowerCase()
+        .includes(search.trim().toLowerCase())
+
+);
+
+
 
 
 
@@ -211,6 +221,31 @@ function clearAllTasks() {
 
             </div>
 
+            <div className="mb-6">
+
+{tasks.length>0&&(
+    <input
+        type="text"
+        value={search}
+        placeholder="🔍 Search tasks..."
+        onChange={(e) => setSearch(e.target.value)}
+        className="
+            w-full
+            border
+            border-gray-300
+            rounded-lg
+            px-4
+            py-2
+            focus:ring-2
+            focus:ring-blue-500
+            focus:outline-none
+        "
+    />)}
+
+</div>
+
+
+
   {tasks.length > 0 && (
 
 <div className="flex justify-end mb-4">
@@ -251,12 +286,21 @@ function clearAllTasks() {
         Add your first task above.
     </p>
 </div>
-) :
+) : filteredTasks.length===0?(
+    <div className="bg-gray-50 rounded-xl p-8 text-center text-gray-500">
+        <p className="text-lg">
+            No matching tasks found.
+        </p>
+    </div>):
+    
+( <div>
 
+    <p className="text-sm text-gray-500">
+    Showing {filteredTasks.length} of {tasks.length} tasks
+</p>
 
-(
     <ul className="space-y-4">
-        {tasks.map((item, index) => (
+        {filteredTasks.map((item, index) => (
             <li key={index}
             className="
         flex
@@ -397,6 +441,7 @@ function clearAllTasks() {
 
         ))}
     </ul>
+     </div>
 )}
 
 
