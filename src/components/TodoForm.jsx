@@ -1,11 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Trash2, Pencil, Check,Trash,X,Undo,Save} from "lucide-react";
 
 function TodoForm() {
 
     const [task, setTask] = useState("");
-    const [tasks, setTasks] = useState([]);
+
+    const [tasks, setTasks] = useState(() => {
+        const savedTasks = localStorage.getItem("tasks");
+
+        return savedTasks ? JSON.parse(savedTasks) : [];
+});
+
     const [editingIndex, setEditingIndex] = useState(null);
     const [editText, setEditText] = useState("");
+
+    
+
+useEffect(() => {
+
+    localStorage.setItem(
+        "tasks",
+        JSON.stringify(tasks)
+    );
+
+}, [tasks]);
+
 
     function addTask() {
 
@@ -121,6 +140,20 @@ function cancelEdit() {
 
 }
 
+function clearAllTasks() {
+
+    const confirmDelete = window.confirm(
+        "Are you sure you want to delete all tasks?"
+    );
+
+    if (!confirmDelete) {
+        return;
+    }
+
+    setTasks([]);
+
+}
+
 
 
 
@@ -178,8 +211,33 @@ function cancelEdit() {
 
             </div>
 
+  {tasks.length > 0 && (
+
+<div className="flex justify-end mb-4">
+
+    <button
+        onClick={clearAllTasks}
+        className="
+            bg-red-600
+            text-white
+            px-4
+            py-2
+            rounded-lg
+            hover:bg-red-700
+            transition
+        "
+    >
+       <Trash size={18} /> Clear all 
+    </button>
+
+</div>
+
+)}
+    
+   
+
             
-{/* ipuut area ended */}
+
 
 {tasks.length === 0 ?
 
@@ -250,7 +308,7 @@ function cancelEdit() {
                 hover:bg-blue-700
             "
         >
-            💾 Save
+           <Save size={18} /> Save
         </button>
 
         <button
@@ -263,7 +321,7 @@ function cancelEdit() {
                 hover:bg-gray-600
             "
         >
-            ❌ Cancel
+           <X size={18} /> Cancel
 
         </button>
 
@@ -296,7 +354,13 @@ function cancelEdit() {
         ${item.completed?"bg-blue-500 hover:bg-blue-600"
             :"bg-green-500 hover:bg-green-600 "}
     `}>
-     {item.completed ? "↩ Undo" : "✔ Complete"}
+     {item.completed ?(
+        <>
+        <Undo size={18} /> 
+        <span className ="text -xs">Undo</span> </> ): (
+        <>
+        <Check size={18} /> 
+        <span className ="text -xs">Check</span> </> )}
       </button>
 
 
@@ -312,7 +376,7 @@ function cancelEdit() {
         transition
     "
 >
-    ✏ Edit
+   <Pencil size={18} /> Edit
 </button>
 
 <button onClick={() => deleteTask(index)}
@@ -324,21 +388,33 @@ function cancelEdit() {
         hover:bg-red-600
         transition
     ">
-                   🗑 Delete
+               <Trash2 size={18}  />   Delete 
 </button>
             
 </div>
 
    </li>
-   
+
         ))}
     </ul>
 )}
 
 
-<p> the length of tasks  is {tasks.length}</p>
-<p>✅ Completed: {completedTasks}</p>
-<p>📌 Remaining: {remainingTasks}</p>
+<div className="mt-6 flex justify-between bg-slate-100 rounded-lg p-4">
+
+    <p>
+        📋 Total: <strong>{tasks.length}</strong>
+    </p>
+
+    <p>
+        ✅ Completed: <strong>{completedTasks}</strong>
+    </p>
+
+    <p>
+        📌 Remaining: <strong>{remainingTasks}</strong>
+    </p>
+
+</div>
 
         </div>
     );
