@@ -15,6 +15,7 @@ function TodoForm() {
     const [editText, setEditText] = useState("");
 
     const [search, setSearch] = useState("");
+    const [filter, setFilter] = useState("all");
     
 
 useEffect(() => {
@@ -26,6 +27,7 @@ useEffect(() => {
 
 }, [tasks]);
 
+// tasksssssss
 
     function addTask() {
 
@@ -156,13 +158,22 @@ function clearAllTasks() {
 }
 
 
-const filteredTasks = tasks.filter((item) =>
+const filteredTasks = tasks.filter((item) => {
 
-    item.text
+    const matchesSearch = item.text
         .toLowerCase()
-        .includes(search.trim().toLowerCase())
+        .includes(search.toLowerCase());
 
-);
+    const matchesFilter =
+        filter === "all"
+            ? true
+            : filter === "active"
+            ? !item.completed
+            : item.completed;
+
+    return matchesSearch && matchesFilter;
+
+});
 
 
 
@@ -245,6 +256,75 @@ const filteredTasks = tasks.filter((item) =>
 </div>
 
 
+<div className="flex gap-3 mb-6">
+
+    <button
+        onClick={() => setFilter("all")}
+        className={`
+            px-4 py-2 rounded-lg transition
+            ${
+                filter === "all"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200"
+            }
+        `}
+    >
+        
+
+  <p>   📋 All : <strong>{tasks.length}</strong>
+    </p>
+
+    </button>
+
+    <button
+        onClick={() => setFilter("active")}
+        className={`
+            px-4 py-2 rounded-lg transition
+            ${
+                filter === "active"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200"
+            }
+        `}
+    >
+         <p>   ⏳ Active : <strong>{tasks.filter(task => !task.completed).length}</strong>
+    </p>
+    </button>
+
+    <button
+        onClick={() => setFilter("completed")}
+        className={`
+            px-4 py-2 rounded-lg transition
+            ${
+                filter === "completed"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200"
+            }
+        `}
+    >
+        <p>   ✅ Completed : <strong>{tasks.filter(task => task.completed).length}</strong>
+    </p>
+    </button>
+
+</div>
+
+{search && (
+    <p className = {"text-sm text-gray-500  "}>
+        Searching for "{search}"
+    </p>
+)}
+
+
+<p className="text-gray-500 text-sm mb-4">
+
+    Showing
+    <span className="font-semibold">
+        {" "}{filter}
+    </span>
+    {" "}tasks
+
+</p>
+
 
   {tasks.length > 0 && (
 
@@ -262,7 +342,7 @@ const filteredTasks = tasks.filter((item) =>
             transition
         "
     >
-       <Trash size={18} /> Clear all 
+       <Trash size={18} /> Clear all tasks
     </button>
 
 </div>
@@ -289,10 +369,10 @@ const filteredTasks = tasks.filter((item) =>
 ) : filteredTasks.length===0?(
     <div className="bg-gray-50 rounded-xl p-8 text-center text-gray-500">
         <p className="text-lg">
-            No matching tasks found.
+            No {filter} tasks found.
         </p>
     </div>):
-    
+
 ( <div>
 
     <p className="text-sm text-gray-500">
@@ -404,7 +484,7 @@ const filteredTasks = tasks.filter((item) =>
         <span className ="text -xs">Undo</span> </> ): (
         <>
         <Check size={18} /> 
-        <span className ="text -xs">Check</span> </> )}
+        <span className ="text -xs">Complete</span> </> )}
       </button>
 
 
@@ -458,6 +538,8 @@ const filteredTasks = tasks.filter((item) =>
     <p>
         📌 Remaining: <strong>{remainingTasks}</strong>
     </p>
+
+   
 
 </div>
 
