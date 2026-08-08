@@ -1,21 +1,19 @@
+import TodoItem from "./TodoItem";
 import { useState, useEffect } from "react";
-import { Trash2, Pencil, Check,Trash,X,Undo,Save} from "lucide-react";
+import { Trash} from "lucide-react";
 
 function TodoForm() {
 
-    const [task, setTask] = useState("");
+ const [task, setTask] = useState("");
 
-    const [tasks, setTasks] = useState(() => {
-        const savedTasks = localStorage.getItem("tasks");
+ const [tasks, setTasks] = useState(() => {
+const savedTasks = localStorage.getItem("tasks");
 
         return savedTasks ? JSON.parse(savedTasks) : [];
 });
 
-    const [editingIndex, setEditingIndex] = useState(null);
-    const [editText, setEditText] = useState("");
-
-    const [search, setSearch] = useState("");
-    const [filter, setFilter] = useState("all");
+ const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
     
 
 useEffect(() => {
@@ -26,8 +24,6 @@ useEffect(() => {
     );
 
 }, [tasks]);
-
-// tasksssssss
 
     function addTask() {
 
@@ -90,28 +86,22 @@ const completedTasks = tasks.filter(task => task.completed).length;
 const remainingTasks = tasks.length - completedTasks;
 
 
-function startEditing(index) {
-    setEditingIndex(index);
-    setEditText(tasks[index].text);
-}
+function saveEdit(indexToSave, newText) {
 
-
-function saveEdit(indexToSave) {
-
-    if (editText.trim() === "") {
+    if (newText.trim() === "") {
         return;
     }
 
     if (
-    tasks.some(
-        (item, index) =>
-            index !== indexToSave &&
-            item.text.toLowerCase() === editText.toLowerCase()
-    )
-) {
-    alert("Task already exists!");
-    return;
-}
+        tasks.some(
+            (item, index) =>
+                index !== indexToSave &&
+                item.text.toLowerCase() === newText.toLowerCase()
+        )
+    ) {
+        alert("Task already exists!");
+        return;
+    }
 
     const updatedTasks = tasks.map((item, index) => {
 
@@ -119,7 +109,7 @@ function saveEdit(indexToSave) {
 
             return {
                 ...item,
-                text: editText
+                text: newText
             };
 
         }
@@ -129,19 +119,8 @@ function saveEdit(indexToSave) {
     });
 
     setTasks(updatedTasks);
-
-    setEditingIndex(null);
-    setEditText("");
-
 }
 
-
-function cancelEdit() {
-
-    setEditingIndex(null);
-    setEditText("");
-
-}
 
 function clearAllTasks() {
 
@@ -223,6 +202,7 @@ const filteredTasks = tasks.filter((item) => {
               rounded-lg 
               hover:bg-blue-700
                transition duration-200
+               disabled:opacity-80
         font-medium"
             onClick={addTask}
             disabled={task.trim() === ""}>
@@ -379,145 +359,20 @@ const filteredTasks = tasks.filter((item) => {
     Showing {filteredTasks.length} of {tasks.length} tasks
 </p>
 
+
+
     <ul className="space-y-4">
-        {filteredTasks.map((item, index) => (
-            <li key={index}
-            className="
-        flex
-        items-center
-        justify-between
-        bg-gray-50
-        p-4
-        rounded-xl
-        shadow-sm
-        hover:shadow-md
-        hover:-translate-y-1
-        transition-all
-        duration-200
-    " >
-    {editingIndex === index ? (
-
-
-    <div className="flex flex-1 gap-2">
-
-        <input
-            value={editText}
-            onChange={(e) => setEditText(e.target.value)}
-            onKeyDown={(e) => {
-
-    if (e.key === "Enter") {
-
-        saveEdit(index);
-
-    }
-
-}}
-            className="
-                flex-1
-                border
-                rounded-lg
-                px-3
-                py-2
-            "
-        />
-
-        <button
-            onClick={() => saveEdit(index)}
-            disabled={editText.trim() === ""}
-            className="
-                bg-blue-600
-                text-white
-                px-4
-                rounded-lg
-                hover:bg-blue-700
-            "
-        >
-           <Save size={18} /> Save
-        </button>
-
-        <button
-            onClick={cancelEdit}
-            className="
-                bg-gray-500
-                text-white
-                px-4
-                rounded-lg
-                hover:bg-gray-600
-            "
-        >
-           <X size={18} /> Cancel
-
-        </button>
-
-    </div>
-
-) : (
-
-    <span
-        className={`
-            text-lg
-            ${item.completed
-                ? "line-through text-gray-400"
-                : "text-gray-800"}
-        `}
-    >
-        {item.text}
-    </span>
-
-)}
-        <div className ="flex gap -2">
-
-            <button onClick={() => toggleComplete(index)}
-        className={`
-       
-        text-white
-        px-4
-        py-2
-        rounded-lg
-        
-        ${item.completed?"bg-blue-500 hover:bg-blue-600"
-            :"bg-green-500 hover:bg-green-600 "}
-    `}>
-     {item.completed ?(
-        <>
-        <Undo size={18} /> 
-        <span className ="text -xs">Undo</span> </> ): (
-        <>
-        <Check size={18} /> 
-        <span className ="text -xs">Complete</span> </> )}
-      </button>
-
-
-     <button
-    onClick={() => startEditing(index)}
-    className="
-        bg-yellow-500
-        text-white
-        px-4
-        py-2
-        rounded-lg
-        hover:bg-yellow-600
-        transition
-    "
->
-   <Pencil size={18} /> Edit
-</button>
-
-<button onClick={() => deleteTask(index)}
-                   className =" bg-red-500
-        text-white
-        px-4
-        py-2
-        rounded-lg
-        hover:bg-red-600
-        transition
-    ">
-               <Trash2 size={18}  />   Delete 
-</button>
-            
-</div>
-
-   </li>
+        {
+        filteredTasks.map((item, index) => (
+<TodoItem
+    key={index}
+    text={item.text}
+    completed={item.completed}
+    index={index}
+    deleteTask={deleteTask}
+    toggleComplete={toggleComplete}
+    saveEdit={saveEdit}
+/>
 
         ))}
     </ul>
@@ -527,17 +382,11 @@ const filteredTasks = tasks.filter((item) => {
 
 <div className="mt-6 flex justify-between bg-slate-100 rounded-lg p-4">
 
-    <p>
-        📋 Total: <strong>{tasks.length}</strong>
-    </p>
+    <p> 📋 Total: <strong>{tasks.length}</strong></p>
 
-    <p>
-        ✅ Completed: <strong>{completedTasks}</strong>
-    </p>
+    <p> ✅ Completed: <strong>{completedTasks}</strong></p>
 
-    <p>
-        📌 Remaining: <strong>{remainingTasks}</strong>
-    </p>
+    <p>  📌 Remaining: <strong>{remainingTasks}</strong> </p>
 
    
 
