@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Trash2, Pencil, Check,X,Undo,Save} from "lucide-react";
+import { Trash2,Pencil, Check,X,Undo,Save} from "lucide-react";
 
-function TodoItem({ text,completed,index,deleteTask,toggleComplete,saveEdit}) {
+function TodoItem({id, text,completed,deleteTask,toggleComplete,saveEdit}) {
 
 const [isEditing, setIsEditing] = useState(false);
 const [editText, setEditText] = useState(text);
@@ -28,7 +28,7 @@ const [editText, setEditText] = useState(text);
     onChange={(e) => setEditText(e.target.value)}
     onKeyDown={(e) => {
         if (e.key === "Enter") {
-            saveEdit(index, editText);
+            saveEdit(id, editText);
             setIsEditing(false);
         }
     }}
@@ -47,7 +47,7 @@ const [editText, setEditText] = useState(text);
 
             <button
     onClick={() => {
-        saveEdit(index, editText);
+        saveEdit(id, editText);
         setIsEditing(false);
     }}
     disabled={editText.trim() === ""}
@@ -108,7 +108,7 @@ const [editText, setEditText] = useState(text);
 
             <div className="flex gap-2">
 
-             <button onClick={() => toggleComplete(index)}
+             <button onClick={() => toggleComplete(id)}
     className={`
         flex
         items-center
@@ -159,7 +159,7 @@ const [editText, setEditText] = useState(text);
     <span>Edit</span>
 </button>
 
-        <button onClick={() => deleteTask(index)}
+        <button onClick={() => deleteTask(id)}
     className="
         flex
         items-center

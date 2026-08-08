@@ -23,22 +23,19 @@ useEffect(() => {
         JSON.stringify(tasks)
     );
 
-}, [tasks]);
+     }, [tasks]);
 
-    function addTask() {
 
-    if (
-        tasks.some(
-    (item) => item.text.toLowerCase() === task.toLowerCase()
-)
-    ) {
-        alert("Task already exists!");
-        return;
-    }
+ function addTask() {
+
+    if ( tasks.some( (item) => item.text.toLowerCase() === task.toLowerCase())
+    ) {alert("Task already exists!");
+        return; }
 
     setTasks([
     ...tasks,
     {
+        id: Date.now(),
         text: task,
         completed: false
     }
@@ -47,22 +44,22 @@ useEffect(() => {
 }
 
 
-    function deleteTask(indexToDelete){
-        const updatedTasks = tasks.filter((item, index) => {
+function deleteTask(taskId) {
 
-    return index !== indexToDelete;
+    const updatedTasks = tasks.filter((item) => {
 
-});
+        return item.id !== taskId;
 
-setTasks(updatedTasks);
+    });
+
+    setTasks(updatedTasks);
 }
 
+function toggleComplete(taskId) {
 
-function toggleComplete(indexToToggle) {
+    const updatedTasks = tasks.map((item) => {
 
-    const updatedTasks = tasks.map((item, index) => {
-
-        if (index === indexToToggle) {
+        if (item.id === taskId) {
 
             return {
                 ...item,
@@ -76,7 +73,6 @@ function toggleComplete(indexToToggle) {
     });
 
     setTasks(updatedTasks);
-
 }
 
 
@@ -86,7 +82,7 @@ const completedTasks = tasks.filter(task => task.completed).length;
 const remainingTasks = tasks.length - completedTasks;
 
 
-function saveEdit(indexToSave, newText) {
+function saveEdit(taskId, newText) {
 
     if (newText.trim() === "") {
         return;
@@ -94,8 +90,8 @@ function saveEdit(indexToSave, newText) {
 
     if (
         tasks.some(
-            (item, index) =>
-                index !== indexToSave &&
+            (item) =>
+                item.id !== taskId &&
                 item.text.toLowerCase() === newText.toLowerCase()
         )
     ) {
@@ -103,9 +99,9 @@ function saveEdit(indexToSave, newText) {
         return;
     }
 
-    const updatedTasks = tasks.map((item, index) => {
+    const updatedTasks = tasks.map((item) => {
 
-        if (index === indexToSave) {
+        if (item.id === taskId) {
 
             return {
                 ...item,
@@ -363,18 +359,17 @@ const filteredTasks = tasks.filter((item) => {
 
     <ul className="space-y-4">
         {
-        filteredTasks.map((item, index) => (
-<TodoItem
-    key={index}
-    text={item.text}
-    completed={item.completed}
-    index={index}
-    deleteTask={deleteTask}
-    toggleComplete={toggleComplete}
-    saveEdit={saveEdit}
-/>
-
-        ))}
+    filteredTasks.map((item) => (
+    <TodoItem
+        key={item.id}
+        id={item.id}
+        text={item.text}
+        completed={item.completed}
+        deleteTask={deleteTask}
+        toggleComplete={toggleComplete}
+        saveEdit={saveEdit}
+    />
+))}
     </ul>
      </div>
 )}
