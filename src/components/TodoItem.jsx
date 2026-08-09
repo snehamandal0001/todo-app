@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,memo } from "react";
 import { Trash2,Pencil, Check,X,Undo,Save} from "lucide-react";
 
 function TodoItem({id, text,completed,deleteTask,toggleComplete,saveEdit}) {
@@ -57,8 +57,7 @@ const [editText, setEditText] = useState(text);
         gap-2
         bg-blue-600
         text-white
-        px-4
-        py-2
+        px-3 py-2 md:px-4
         rounded-lg
         hover:bg-blue-700
         disabled:opacity-50
@@ -80,8 +79,7 @@ const [editText, setEditText] = useState(text);
         gap-2
         bg-gray-500
         text-white
-        px-4
-        py-2
+        px-3 py-2 md:px-4
         rounded-lg
         hover:bg-gray-600
         transition
@@ -97,7 +95,12 @@ const [editText, setEditText] = useState(text);
 
         //NORMAL MODE
 
-        <div className="flex justify-between items-center">
+        <div className="flex
+    flex-col
+    gap-4
+    md:flex-row
+    md:items-center
+    md:justify-between">
 
           <span className={` text-lg flex-1
         ${completed
@@ -106,7 +109,7 @@ const [editText, setEditText] = useState(text);
                 {text}
             </span> 
 
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
 
              <button onClick={() => toggleComplete(id)}
     className={`
@@ -114,8 +117,7 @@ const [editText, setEditText] = useState(text);
         items-center
         gap-2
         text-white
-        px-4
-        py-2
+        px-3 py-2 md:px-4
         rounded-lg
         transition
         ${
@@ -148,8 +150,7 @@ const [editText, setEditText] = useState(text);
         gap-2
         bg-yellow-500
         text-white
-        px-4
-        py-2
+        px-3 py-2 md:px-4
         rounded-lg
         hover:bg-yellow-600
         transition
@@ -166,8 +167,7 @@ const [editText, setEditText] = useState(text);
         gap-2
         bg-red-500
         text-white
-        px-4
-        py-2
+        px-3 py-2 md:px-4
         rounded-lg
         hover:bg-red-600
         transition
@@ -188,4 +188,4 @@ const [editText, setEditText] = useState(text);
 
 }
 
-export default TodoItem;
+export default memo(TodoItem);
