@@ -1,5 +1,7 @@
 import TodoItem from "./TodoItem";
 import TaskInput from "./TaskInput";
+import SearchFilter from "./SearchFilter";
+
 import { Trash, AlertTriangle, X} from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -212,84 +214,14 @@ const filteredTasks = tasks.filter((item) => {
 
 
 
-            <div className="mb-6">
+  <SearchFilter
+    search={search}
+    setSearch={setSearch}
+    filter={filter}
+    setFilter={setFilter}
+    tasks={tasks}
+/>
 
-{tasks.length>0&&(
-    <input
-        type="text"
-        value={search}
-        placeholder="🔍 Search tasks..."
-        onChange={(e) => setSearch(e.target.value)}
-        className="
-            w-full
-            border
-            border-gray-300
-            rounded-lg
-            px-3 py-2 md:px-4
-            focus:ring-2
-            focus:ring-blue-500
-            focus:outline-none
-        "
-    />)}
-
-</div>
-
-
-<div className="
-    flex
-    flex-wrap
-    gap-3
-    mb-6
-">
-    <button
-        onClick={() => setFilter("all")}
-        className={`
-            px-3 py-2 md:px-4 rounded-lg transition
-            ${
-                filter === "all"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200"
-            }
-        `}
-    >
-        
-
-  <p>   📋 All : <strong>{tasks.length}</strong>
-    </p>
-
-    </button>
-
-    <button
-        onClick={() => setFilter("active")}
-        className={`
-            px-3 py-2 md:px-4 rounded-lg transition
-            ${
-                filter === "active"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200"
-            }
-        `}
-    >
-         <p>   ⏳ Active : <strong>{tasks.filter(task => !task.completed).length}</strong>
-    </p>
-    </button>
-
-    <button
-        onClick={() => setFilter("completed")}
-        className={`
-            px-3 py-2 md:px-4 rounded-lg transition
-            ${
-                filter === "completed"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200"
-            }
-        `}
-    >
-        <p>   ✅ Completed : <strong>{tasks.filter(task => task.completed).length}</strong>
-    </p>
-    </button>
-
-</div>
 
 <div className="mb-6">
 
