@@ -19,6 +19,7 @@ function SearchFilter({
                     className="
                         w-full
                         border
+                        mb-4
                         border-gray-300
                         rounded-lg
                         px-3 py-2 md:px-4
